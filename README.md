@@ -1,5 +1,5 @@
 # Biblia-Sagrada-Json-JFA
-Está é uma página html simples contendo a Biblia Sagrada para uma apresentação em data show na sua igreja com o navegador em tela cheia.
+Está é uma página html simples contendo Livros da Biblia Sagrada em json e para uma apresentação em data show na sua igreja com o navegador em tela cheia.
 ## Você não precisa ter nenhum conhecimento técnico e nem instalar nada mais, basta você baixar todo este repositório e acessar o arquivo index.html
 
 ### Caso você tenha conhecimento técnico e queira contribuir com este repositório fique a vontade para abrir um pull request.
