@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ler JSON com JavaScript</title>
+</head>
+<body>
+    <link rel="stylesheet" href="css_biblia.css">
+
+    <div id="app">
+        <div class="filtros">
+            Biblia Sagrada
+            <select v-model="selectedBook">
+                <option value="">Selecione um Livro</option>
+                <option v-for="book in booksbible" :key="book" :value="book">{{ book.book_name }}</option>
+            </select>
+          
+            <select v-model="selectedChapter" v-if="selectedBook">
+                <option value="">Selecione um Capítulo</option>
+                <option v-for="chapter in getChapters(selectedBook)" :key="chapter" :value="chapter">{{ chapter }}</option>
+            </select>
+          
+            <select v-model="selectedVerse" v-if="selectedChapter">
+                <option value="">Selecione um Versículo</option>
+                <option v-for="verse in getVerses" :key="verse" :value="verse">{{ verse }}</option>
+            </select>
+
+            {{verseCount ?? 0}}
+
+            <span v-if="selectedBook && selectedChapter && selectedVerse">
+                <button id="prev" @click="previVerse">
+                    ←
+                </button>
+    
+                <button id="next" @click="nextVerse">
+                    →
+                </button>
+            </span>
+        </div>
+
+        <div class="title-book" v-if="selectedBook && selectedChapter && selectedVerse"> {{selectedBook.book_name}} {{selectedChapter}}:{{selectedVerse}} </div>
+
+        <div class="tela-cheia" v-html="message"></div>
+
+        <div v-if="selectedBook && selectedChapter && selectedVerse" class="tela-cheia">
+            {{displayVerse()}}
+        </div>
+
+        <div v-if="debugcode">
+            <pre>
+                selectedbook : {{selectedBook}},
+                selectedChapter : {{selectedChapter}},
+                selectedVerse : {{selectedVerse}}
+            </pre>
+        </div>
+    </div>
+
+
+    <script src="jsondata_almeida_rc.js"></script>
+    <script src="books_bible.js"></script>
+
+    <script src="vue_2.js"></script>
+    
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                debugcode: false,
+                message: '',
+                jsonData: jsonData.verses,
+                booksbible: booksbible,
+                verseCount: 0, 
+                selectedBook: "",
+                selectedChapter: "",
+                selectedVerse: "",
+            },
+            methods: {
+                getChapters(book) {
+                    return Array.from({ length: book.chapters }, (_, i) => i + 1);
+                },
+                displayVerse() {
+                    let versiculoSelecionado = this.jsonData.filter(versiculo => versiculo.book == this.selectedBook.book_id && versiculo.chapter == this.selectedChapter && versiculo.verse == this.selectedVerse)
+
+                    return versiculoSelecionado[0].text;
+                },
+                previVerse() {
+                    if(this.selectedVerse >= 2) {
+                        this.selectedVerse = this.selectedVerse - 1;
+                    }
+                },
+                nextVerse() {
+                    if(this.verseCount > this.selectedVerse) {
+                        this.selectedVerse = this.selectedVerse + 1;
+                    }
+                }
+            },
+            computed: {
+                getVerses() {
+                    this.selectedVerse = 1;
+                    let versiculosCapituloLivro = this.jsonData.filter(versiculo => versiculo.book == this.selectedBook.book_id && versiculo.chapter == this.selectedChapter);
+                    
+                    this.verseCount = versiculosCapituloLivro.length;
+                    return Array.from({ length: this.verseCount }, (_, i) => i + 1);
+                },
+            },
+        })
+    </script>
+
+    <script>
+        // Função para lidar com o evento de teclado
+        function lidarComEventoDeTeclado(event) {
+            if (event.keyCode === 39) {
+                document.getElementById('next').click();
+            }
+
+            if (event.keyCode === 37) {
+                document.getElementById('prev').click();
+            }
+        }
+
+        // Adicione um ouvinte de evento de teclado ao documento
+        document.addEventListener('keydown', lidarComEventoDeTeclado);
+    </script>
+</body>
+</html>

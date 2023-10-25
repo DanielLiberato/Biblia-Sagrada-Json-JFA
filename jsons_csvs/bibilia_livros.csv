@@ -1,0 +1,67 @@
+id,nome,escritor,lugar,final,periodo,abv,testamento
+1,Gênesis,Moisés,Deserto,1513,"No princípio até 1657",Gen,1
+2,Êxodo,Moisés,Deserto,1512,1657-1512,Êx,1
+3,Levítico,Moisés,Deserto,1512,"1 mês (1512)",Le,1
+4,Números,Moisés,"Deserto e planícies de Moabe",1473,1512-1473,Núm,1
+5,Deuteronômio,Moisés,"Planícies de Moabe",1473,"2 meses (1473)",De,1
+6,Josué,Josué,Canaã,"c. 1450","1473–c. 1450",Jos,1
+7,Juízes,Samuel,Israel,"c. 1100","c. 1450–c. 1120",Jz,1
+8,Rute,Samuel,Israel,"c. 1090","11 anos de domínio pelos juízes",Ru,1
+9,1 Samuel,"Samuel /  Gade /  Natã",Israel,"c. 1078","c. 1180-1078",1Sa,1
+10,2 Samuel,"Gade /  Natã",Israel,"c. 1040","1077–c. 1040",2Sa,1
+11,1 Reis,Jeremias,Judá,580,"c. 1040-911",1Rs,1
+12,2 Reis,Jeremias,"Judá e Egito",580,"c. 920-580",2Rs,1
+13,1 Crônicas,Esdras,"Jerusalém (?)","c. 460","A partir de 1 Crônicas 9:44: c. 1077-1037",1Cr,1
+14,2 Crônicas,Esdras,"Jerusalém (?)","c. 460","c. 1077-537",2Cr,1
+15,Esdras,Esdras,Jerusalém,"c. 460",537–c. 467,Esd,1
+16,Neemias,Neemias,Jerusalém,"d. 443",456–d. 443,Ne,1
+17,Ester,Mordecai,"Susã- Elão","c. 475",493–c. 475,Est,1
+18,Jó,Moisés,Deserto,"c. 1473","Mais de 140 anos entre 1657 e 1473",Jó,1
+19,Salmos,"Davi e outros", ,c. 460, ,Sal,1
+20,Provérbios,"Salomão /  Agur /  Lemuel",Jerusalém,c. 717, ,Pr,1
+21,Eclesiastes,Salomão,Jerusalém,"a. 1000", ,Ec,1
+22,"Cântico de Salomão",Salomão,Jerusalém,"c. 1020", ,Can,1
+23,Isaías,Isaías,Jerusalém,"d. 732","c. 778–d. 732",Is,1
+24,Jeremias,Jeremias,"Judá /  Egito",580,647-580,Je,1
+25,Lamentações,Jeremias,"Perto de Jerusalém",607, ,La,1
+26,Ezequiel,Ezequiel,Babilônia,"c. 591",613–c. 591,Ez,1
+27,Daniel,Daniel,Babilônia,"c. 536",618–c. 536,Da,1
+28,Oseias,Oseias,"Samaria (Distrito de)","d. 745","a. 804–d. 745",Os,1
+29,Joel,Joel,Judá,"c. 820 (?)", ,Jl,1
+30,Amós,Amós,Judá,c. 804, ,Am,1
+31,Obadias,Obadias, ,c. 607, ,Ob,1
+32,Jonas,Jonas, ,c. 844, ,Jon,1
+33,Miqueias,Miqueias,Judá,"a. 717","c. 777-717",Miq,1
+34,Naum,Naum,Judá,a. 632, ,Na,1
+35,Habacuque,Habacuque,Judá,"c. 628 (?)", ,Hab,1
+36,Sofonias,Sofonias,Judá,a. 648, ,Sof,1
+37,Ageu,Ageu,"Jerusalém reconstruída",520,"112 dias (520)",Ag,1
+38,Zacarias,Zacarias,"Jerusalém reconstruída",518,520-518,Zac,1
+39,Malaquias,Malaquias,"Jerusalém reconstruída",d. 443,,Mal,1
+40,Mateus,Mateus,Israel,"c. 41",2 a.C.–33 d.C.,Mt,2
+41,Marcos,Marcos,Roma,"c. 60-65",29-33 d.C.,Mc,2
+42,Lucas,Lucas,Cesareia,"c. 56-58",3 a.C.–33 d.C.,Lu,2
+43,João,"Apóstolo João","Éfeso- ou perto dali","c. 98","Depois do prólogo- 29-33 d.C.",Jo,2
+44,Atos,Lucas,Roma,"c. 61","33–c. 61 d.C.",At,2
+45,Romanos,Paulo,Corinto,c. 56, ,Ro,2
+46,1 Coríntios,Paulo,Éfeso,c. 55, ,1Co,2
+47,2 Coríntios,Paulo,Macedônia,c. 55, ,2Co,2
+48,Gálatas,Paulo,"Corinto ou Antioquia da Síria","c. 50-52", ,Gál,2
+49,Efésios,Paulo,Roma,"c. 60-61", ,Ef,2
+50,Filipenses,Paulo,Roma,"c. 60-61", ,Fil,2
+51,Colossenses,Paulo,Roma,"c. 60-61", ,Col,2
+52,1 Tessalonicenses,Paulo,Corinto,c. 50, ,1Te,2
+53,2 Tessalonicenses,Paulo,Corinto,c. 51, ,2Te,2
+54,1 Timóteo,Paulo,Macedônia,"c. 61-64", ,1Ti,2
+55,2 Timóteo,Paulo,Roma,c. 65, ,2Ti,2
+56,Tito,Paulo,"Macedônia (?)","c. 61-64", ,Tit,2
+57,Filêmon,Paulo,Roma,"c. 60-61", ,Flm,2
+58,Hebreus,Paulo,Roma,c. 61, ,Heb,2
+59,Tiago,"Tiago (irmão de Jesus)",Jerusalém,a. 62, ,Tg,2
+60,1 Pedro,Pedro,Babilônia,"c. 62-64", ,1Pe,2
+61,2 Pedro,Pedro,"Babilônia (?)",c. 64, ,2Pe,2
+62,1 João,"Apóstolo João","Éfeso- ou perto dali",c. 98, ,1Jo,2
+63,2 João,"Apóstolo João","Éfeso- ou perto dali",c. 98, ,2Jo,2
+64,3 João,"Apóstolo João","Éfeso- ou perto dali",c. 98, ,3Jo,2
+65,Judas,"Judas (irmão de Jesus)","Israel (?)",c. 65, ,Ju,2
+66,Apocalipse,"Apóstolo João",Patmos,c. 96,,Ap,2
