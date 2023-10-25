@@ -74,11 +74,17 @@
                 selectedVerse: "",
             },
             methods: {
-                getChapters(book) {
+                getChapters(book) { 
                     return Array.from({ length: book.chapters }, (_, i) => i + 1);
                 },
                 displayVerse() {
                     let versiculoSelecionado = this.jsonData.filter(versiculo => versiculo.book == this.selectedBook.book_id && versiculo.chapter == this.selectedChapter && versiculo.verse == this.selectedVerse)
+                    
+                    if (versiculoSelecionado.length == 0) {
+                        this.selectedChapter = 1
+                        this.selectedVerse = 1
+                        versiculoSelecionado = this.jsonData.filter(versiculo => versiculo.book == this.selectedBook.book_id && versiculo.chapter == this.selectedChapter && versiculo.verse == this.selectedVerse)  
+                    }
 
                     return versiculoSelecionado[0].text;
                 },
