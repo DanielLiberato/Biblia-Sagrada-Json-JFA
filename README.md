@@ -3,5 +3,6 @@ Está é uma página html simples contendo Livros da Biblia Sagrada em json e pa
 ## Você não precisa ter nenhum conhecimento técnico e nem instalar nada mais, basta você baixar todo este repositório e acessar o arquivo index.html
 
 ### Caso você tenha conhecimento técnico e queira contribuir com este repositório fique a vontade para abrir um pull request.
+Dou devidos créditos ao site https://www.biblesupersearch.com/bible-downloads/ onde eu consegui o json da biblia.
 
 ![image](https://github.com/DanielLiberato/Biblia-Sagrada-Json-JFA/assets/81873713/7e85aa86-686b-4215-849e-358c9b61b07a)
