@@ -1,4 +1,4 @@
-var harpa_crista = {
+{
     "-1": {
         "Author": "Daniel Liberato da Silva",
         "date": "11-11-2023",
@@ -6133,4 +6133,4 @@ var harpa_crista = {
             "4": "Do Ipiranga é preciso que o brado <br> Seja um grito soberbo de fé! <br> O Brasil já surgiu libertado, <br> Sobre as púrpuras régias de pé! <br> Eia, pois, brasileiros, avante! <br> Verdes louros colhamos louçãos! <br> Seja o nosso pais, triunfante, <br> Livre terra de livres irmãos!"
         }
     }
-};
+}
