@@ -1,10 +1,11 @@
 body {
-    background-color: black;
-    color: white;
-    font-family: Arial, sans-serif;
-    height: 100%;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
 }
 
 body, html {
@@ -13,38 +14,326 @@ body, html {
     padding: 0;
 }
 
-.tela-cheia {
-    width: 100%;
-    height: 100%;
-    background-color: #333; /* Cor de fundo da div */
-    color: #fff; /* Cor do texto dentro da div */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 5vw; /* Defina o tamanho do texto em relação à largura da janela */
-    font-family: Arial, sans-serif;
-}
-
-.title-book {
-    margin: 10px;
-    text-align: center;
-    font-size: 3vw; /* Defina o tamanho do texto em relação à largura da janela */
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
+/* Barra de controles */
+.controls-bar {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1000;
 }
 
 .filtros {
-    margin-top: 10px;
-    margin-bottom: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-button {
-    border-radius: 10px;
-    background-color: white;
-    color: gray;
+.filtros h2 {
+    text-align: center;
+    margin: 0 0 25px 0;
+    color: #ffffff;
+    font-size: 2.2em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
-select {
-    border-radius: 10px;
+/* Grupos de seleção */
+.selection-group {
+    display: inline-block;
+    margin: 10px 15px;
+    vertical-align: top;
+}
+
+.selection-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #ecf0f1;
+    font-size: 1.1em;
+}
+
+/* Selects melhorados */
+.book-select, .chapter-select {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #2c3e50;
+    font-size: 1.1em;
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.book-select:focus, .chapter-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Controles de versículo */
+.verse-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.verse-input {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #2c3e50;
+    font-size: 1.1em;
+    width: 80px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.verse-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+    transform: translateY(-2px);
+}
+
+.verse-info {
+    color: #ecf0f1;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Controles de navegação */
+.navigation-controls {
+    display: inline-block;
+    margin: 10px 15px;
+    vertical-align: top;
+}
+
+.nav-btn {
+    padding: 12px 20px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.nav-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.nav-btn:disabled {
+    background: #7f8c8d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Controles de tela cheia */
+.fullscreen-controls {
+    display: inline-block;
+    margin: 10px 15px;
+    vertical-align: top;
+}
+
+.fullscreen-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.fullscreen-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Área de exibição do versículo */
+.verse-display-area {
+    padding: 40px 20px;
+    text-align: center;
+    min-height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-book {
+    margin: 0 0 30px 0;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: bold;
+    color: #3498db;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 10px;
+}
+
+.verse-content {
+    font-size: clamp(1.5rem, 4vw, 3.5rem);
+    line-height: 1.4;
+    max-width: 90%;
+    color: #ecf0f1;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.3);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* Mensagem de boas-vindas */
+.welcome-message {
+    text-align: center;
+    padding: 60px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.welcome-message h3 {
+    font-size: 2.5em;
+    color: #3498db;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.welcome-message p {
+    font-size: 1.3em;
+    color: #bdc3c7;
+    margin-bottom: 30px;
+}
+
+.instructions {
+    background: rgba(52, 152, 219, 0.1);
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 4px solid #3498db;
+    text-align: left;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.instructions p {
+    color: #ecf0f1;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+
+.instructions ul {
+    color: #bdc3c7;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+.instructions li {
+    margin-bottom: 8px;
+}
+
+/* Debug info */
+.debug-info {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.8);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+}
+
+/* Modo tela cheia */
+body:fullscreen {
+    background: #000000;
+}
+
+body:fullscreen .controls-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    background: rgba(44, 62, 80, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+body:fullscreen .verse-display-area {
+    padding-top: 150px;
+    min-height: 100vh;
+}
+
+body:fullscreen .verse-content {
+    font-size: clamp(2rem, 6vw, 5rem);
+    background: rgba(0,0,0,0.6);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .controls-bar {
+        padding: 15px 10px;
+    }
+    
+    .filtros h2 {
+        font-size: 1.8em;
+    }
+    
+    .selection-group {
+        display: block;
+        margin: 15px 0;
+        text-align: center;
+    }
+    
+    .book-select, .chapter-select {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .navigation-controls, .fullscreen-controls {
+        display: block;
+        text-align: center;
+        margin: 15px 0;
+    }
+    
+    .verse-display-area {
+        padding: 20px 10px;
+    }
+    
+    .verse-content {
+        padding: 20px;
+        max-width: 95%;
+    }
+    
+    .welcome-message {
+        padding: 40px 15px;
+    }
+    
+    .instructions {
+        padding: 20px;
+        max-width: 90%;
+    }
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.verse-display-area {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.welcome-message {
+    animation: fadeIn 0.5s ease-in-out;
 }
