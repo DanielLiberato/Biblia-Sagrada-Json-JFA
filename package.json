@@ -1,0 +1,47 @@
+{
+  "name": "biblia-sagrada-sistema-leitura",
+  "version": "2.0.0",
+  "description": "Sistema moderno e intuitivo para leitura da Bíblia Sagrada com navegação avançada e modo tela cheia",
+  "main": "index.html",
+  "scripts": {
+    "start": "open index.html",
+    "test": "open tests/test_sistema.html",
+    "dev": "python3 -m http.server 3000",
+    "serve": "npx http-server -p 3000 -o"
+  },
+  "keywords": [
+    "biblia",
+    "sagrada",
+    "leitura",
+    "versiculos",
+    "almeida",
+    "vue",
+    "javascript",
+    "html",
+    "css",
+    "apresentacao",
+    "culto",
+    "igreja"
+  ],
+  "author": "Sistema Bíblia Sagrada",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/castellani8/Biblia-Sagrada-Json-JFA.git"
+  },
+  "bugs": {
+    "url": "https://github.com/castellani8/Biblia-Sagrada-Json-JFA/issues"
+  },
+  "homepage": "https://github.com/castellani8/Biblia-Sagrada-Json-JFA#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+} 

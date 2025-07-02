@@ -1,18 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Bíblia Sagrada - Sistema Melhorado</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de leitura da Bíblia Sagrada com navegação intuitiva e modo tela cheia">
+    <meta name="keywords" content="bíblia, sagrada, leitura, versículos, almeida">
+    <meta name="author" content="Sistema Bíblia Sagrada">
+    
+    <title>📖 Bíblia Sagrada - Sistema de Leitura</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="assets/css/css_biblia.css">
 </head>
 <body>
-    <link rel="stylesheet" href="css_biblia.css">
-
+    <!-- Aplicação Principal -->
     <div id="app">
+        <!-- Barra de Controles -->
         <div class="controls-bar">
             <div class="filtros">
                 <h2>📖 Bíblia Sagrada</h2>
                 
+                <!-- Seleção de Versão -->
                 <div class="selection-group">
                     <label>Versão:</label>
                     <select v-model="selectedVersion" class="version-select" @change="loadBibleVersion">
@@ -21,6 +32,7 @@
                     </select>
                 </div>
 
+                <!-- Seleção de Livro -->
                 <div class="selection-group">
                     <label>Livro:</label>
                     <select v-model="selectedBook" class="book-select">
@@ -29,6 +41,7 @@
                     </select>
                 </div>
               
+                <!-- Seleção de Capítulo -->
                 <div class="selection-group" v-if="selectedBook">
                     <label>Capítulo:</label>
                     <select v-model="selectedChapter" class="chapter-select">
@@ -37,6 +50,7 @@
                     </select>
                 </div>
               
+                <!-- Seleção de Versículo -->
                 <div class="selection-group" v-if="selectedChapter">
                     <label>Versículo:</label>
                     <div class="verse-controls">
@@ -52,6 +66,7 @@
                     </div>
                 </div>
 
+                <!-- Controles de Navegação -->
                 <div class="navigation-controls" v-if="selectedBook && selectedChapter && selectedVerse">
                     <button class="nav-btn" @click="previVerse" :disabled="parseInt(selectedVerse) <= 1">
                         ⬅️ Anterior
@@ -62,6 +77,7 @@
                     </button>
                 </div>
 
+                <!-- Controle de Tela Cheia -->
                 <div class="fullscreen-controls">
                     <button class="fullscreen-btn" @click="toggleFullscreen" :title="isFullscreen ? 'Sair da Tela Cheia (ESC)' : 'Entrar em Tela Cheia (F11)'">
                         {{ isFullscreen ? '🔲 Sair Tela Cheia' : '⛶ Tela Cheia' }}
@@ -70,6 +86,7 @@
             </div>
         </div>
 
+        <!-- Área de Exibição do Versículo -->
         <div class="verse-display-area" v-if="selectedBook && selectedChapter && selectedVerse">
             <div class="title-book">
                 {{selectedBook.book_name}} {{selectedChapter}}:{{selectedVerse}}
@@ -85,9 +102,10 @@
             </div>
         </div>
 
+        <!-- Mensagem de Boas-vindas -->
         <div v-else class="welcome-message">
             <h3>👋 Bem-vindo ao Sistema da Bíblia Sagrada</h3>
-            <p>Selecione um livro, capítulo e versículo para começar</p>
+            <p>Selecione uma versão, livro, capítulo e versículo para começar</p>
             <div class="instructions">
                 <p><strong>Atalhos do teclado:</strong></p>
                 <ul>
@@ -98,240 +116,24 @@
             </div>
         </div>
 
+        <!-- Informações de Debug (apenas se ativado) -->
         <div v-if="debugcode" class="debug-info">
             <pre>
-                selectedbook : {{selectedBook}},
-                selectedChapter : {{selectedChapter}},
-                selectedVerse : {{selectedVerse}},
-                isFullscreen: {{isFullscreen}}
+selectedBook: {{selectedBook?.book_name || 'Nenhum'}},
+selectedChapter: {{selectedChapter || 'Nenhum'}},
+selectedVerse: {{selectedVerse || 'Nenhum'}},
+selectedVersion: {{selectedVersion}},
+verseCount: {{verseCount}},
+isFullscreen: {{isFullscreen}}
             </pre>
         </div>
     </div>
 
-    <script src="jsondata_almeida_rc.js"></script>
-    <script src="jsondata_almeida_ra.js"></script>
-    <script src="books_bible.js"></script>
-    <script src="vue_2.js"></script>
-    
-    <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                debugcode: false,
-                message: '',
-                jsonData: [],
-                booksbible: booksbible,
-                verseCount: 0, 
-                selectedBook: "",
-                selectedChapter: "",
-                selectedVerse: "",
-                isFullscreen: false,
-                selectedVersion: "rc",
-                bibleVersions: {
-                    rc: null,
-                    ra: null
-                }
-            },
-            methods: {
-                getChapters(book) { 
-                    return Array.from({ length: book.chapters }, (_, i) => i + 1);
-                },
-                displayVerse() {
-                    let versiculoSelecionado = this.jsonData.filter(versiculo => 
-                        versiculo.book == this.selectedBook.book_id && 
-                        versiculo.chapter == this.selectedChapter && 
-                        versiculo.verse == this.selectedVerse
-                    );
-                    
-                    if (versiculoSelecionado.length == 0) {
-                        this.selectedChapter = 1;
-                        this.selectedVerse = 1;
-                        versiculoSelecionado = this.jsonData.filter(versiculo => 
-                            versiculo.book == this.selectedBook.book_id && 
-                            versiculo.chapter == this.selectedChapter && 
-                            versiculo.verse == this.selectedVerse
-                        );  
-                    }
-
-                    return versiculoSelecionado[0]?.text || "Versículo não encontrado";
-                },
-                previVerse() {
-                    if(this.selectedVerse > 1) {
-                        this.selectedVerse = parseInt(this.selectedVerse) - 1;
-                        console.log('Verso anterior:', this.selectedVerse);
-                    }
-                },
-                nextVerse() {
-                    console.log('nextVerse chamado - selectedVerse:', this.selectedVerse, 'verseCount:', this.verseCount);
-                    if(parseInt(this.selectedVerse) < parseInt(this.verseCount)) {
-                        this.selectedVerse = parseInt(this.selectedVerse) + 1;
-                        console.log('Próximo verso:', this.selectedVerse);
-                    } else {
-                        console.log('Já está no último versículo');
-                    }
-                },
-                toggleFullscreen() {
-                    if (!document.fullscreenElement) {
-                        document.documentElement.requestFullscreen().then(() => {
-                            this.isFullscreen = true;
-                            console.log('Entrou em fullscreen');
-                        }).catch(err => {
-                            console.log('Erro ao entrar em tela cheia:', err);
-                        });
-                    } else {
-                        document.exitFullscreen().then(() => {
-                            this.isFullscreen = false;
-                            console.log('Saiu do fullscreen');
-                        }).catch(err => {
-                            console.log('Erro ao sair da tela cheia:', err);
-                        });
-                    }
-                },
-                updateFullscreenStatus() {
-                    this.isFullscreen = !!document.fullscreenElement;
-                    console.log('Status fullscreen atualizado:', this.isFullscreen);
-                },
-                updateVerseCount() {
-                    if (!this.selectedBook || !this.selectedChapter) {
-                        this.verseCount = 0;
-                        return;
-                    }
-                    
-                    let versiculosCapituloLivro = this.jsonData.filter(versiculo => 
-                        versiculo.book == this.selectedBook.book_id && 
-                        versiculo.chapter == this.selectedChapter
-                    );
-                    
-                    this.verseCount = versiculosCapituloLivro.length;
-                    console.log('updateVerseCount chamado - Total de versículos:', this.verseCount);
-                },
-                loadBibleVersion() {
-                    // Resetar seleções quando trocar de versão
-                    this.selectedBook = "";
-                    this.selectedChapter = "";
-                    this.selectedVerse = "";
-                    this.verseCount = 0;
-                    
-                    // Carregar a versão selecionada
-                    if (this.selectedVersion === 'rc' && this.bibleVersions.rc) {
-                        this.jsonData = this.bibleVersions.rc.verses;
-                        console.log('Carregada versão RC (Revista e Corrigida)');
-                    } else if (this.selectedVersion === 'ra' && this.bibleVersions.ra) {
-                        this.jsonData = this.bibleVersions.ra.verses;
-                        console.log('Carregada versão RA (Revista e Atualizada)');
-                    }
-                }
-            },
-            computed: {
-                getVerses() {
-                    if (!this.selectedBook || !this.selectedChapter) {
-                        this.verseCount = 0;
-                        return [];
-                    }
-                    
-                    let versiculosCapituloLivro = this.jsonData.filter(versiculo => 
-                        versiculo.book == this.selectedBook.book_id && 
-                        versiculo.chapter == this.selectedChapter
-                    );
-                    
-                    this.verseCount = versiculosCapituloLivro.length;
-                    console.log('Contagem de versículos atualizada:', this.verseCount, 'para livro:', this.selectedBook.book_name, 'capítulo:', this.selectedChapter);
-                    
-                    // Só resetar o versículo se não estiver definido ou for inválido
-                    if (!this.selectedVerse || this.selectedVerse > this.verseCount) {
-                        this.selectedVerse = 1;
-                    }
-                    
-                    return Array.from({ length: this.verseCount }, (_, i) => i + 1);
-                }
-            },
-            watch: {
-                selectedVerse(newVal, oldVal) {
-                    console.log('selectedVerse mudou de', oldVal, 'para', newVal, 'tipo:', typeof newVal);
-                },
-                verseCount(newVal, oldVal) {
-                    console.log('verseCount mudou de', oldVal, 'para', newVal, 'tipo:', typeof newVal);
-                },
-                selectedBook(newVal, oldVal) {
-                    console.log('selectedBook mudou:', newVal?.book_name);
-                    this.selectedChapter = "";
-                    this.selectedVerse = "";
-                    this.verseCount = 0;
-                },
-                selectedChapter(newVal, oldVal) {
-                    console.log('selectedChapter mudou para:', newVal);
-                    this.selectedVerse = "";
-                    // Forçar recálculo dos versículos
-                    this.$nextTick(() => {
-                        this.updateVerseCount();
-                        if (this.verseCount > 0 && !this.selectedVerse) {
-                            this.selectedVerse = 1;
-                        }
-                    });
-                }
-            },
-            mounted() {
-                // Inicializar as versões da Bíblia
-                if (typeof jsonDataRC !== 'undefined') {
-                    this.bibleVersions.rc = jsonDataRC;
-                }
-                if (typeof jsonDataRA !== 'undefined') {
-                    this.bibleVersions.ra = jsonDataRA;
-                }
-                
-                // Carregar a versão padrão (RC)
-                this.loadBibleVersion();
-                
-                // Listener para mudanças no estado de tela cheia
-                document.addEventListener('fullscreenchange', this.updateFullscreenStatus);
-                document.addEventListener('webkitfullscreenchange', this.updateFullscreenStatus);
-                document.addEventListener('mozfullscreenchange', this.updateFullscreenStatus);
-                document.addEventListener('MSFullscreenChange', this.updateFullscreenStatus);
-            },
-            beforeDestroy() {
-                // Remover listeners
-                document.removeEventListener('fullscreenchange', this.updateFullscreenStatus);
-                document.removeEventListener('webkitfullscreenchange', this.updateFullscreenStatus);
-                document.removeEventListener('mozfullscreenchange', this.updateFullscreenStatus);
-                document.removeEventListener('MSFullscreenChange', this.updateFullscreenStatus);
-            }
-        });
-    </script>
-
-    <script>
-        // Função melhorada para lidar com eventos de teclado
-        function lidarComEventoDeTeclado(event) {
-            // Navegar com setas apenas se há versículo selecionado
-            if (app.selectedBook && app.selectedChapter && app.selectedVerse) {
-                if (event.keyCode === 39 || event.key === 'ArrowRight') { // Seta direita
-                    if (app.selectedVerse < app.verseCount) {
-                        app.nextVerse();
-                    }
-                    event.preventDefault();
-                }
-
-                if (event.keyCode === 37 || event.key === 'ArrowLeft') { // Seta esquerda
-                    if (app.selectedVerse > 1) {
-                        app.previVerse();
-                    }
-                    event.preventDefault();
-                }
-            }
-
-            // F11 para toggle fullscreen
-            if (event.keyCode === 122) { // F11
-                app.toggleFullscreen();
-                event.preventDefault();
-            }
-
-            // ESC para sair do fullscreen (funcionalidade nativa do navegador)
-            if (event.keyCode === 27 && document.fullscreenElement) { // ESC
-                document.exitFullscreen();
-            }
-        }
-
-        // Adicionar listener de evento de teclado
-        document.addEventListener('keydown', lidarComEventoDeTeclado);
-    </script>
+    <!-- Scripts -->
+    <script src="assets/data/jsondata_almeida_rc.js"></script>
+    <script src="assets/data/jsondata_almeida_ra.js"></script>
+    <script src="assets/data/books_bible.js"></script>
+    <script src="assets/js/vue_2.js"></script>
+    <script src="assets/js/bible-app.js"></script>
 </body>
 </html>
