@@ -45,11 +45,11 @@
                 </div>
 
                 <div class="navigation-controls" v-if="selectedBook && selectedChapter && selectedVerse">
-                    <button class="nav-btn" @click="previVerse" :disabled="selectedVerse <= 1">
+                    <button class="nav-btn" @click="previVerse" :disabled="parseInt(selectedVerse) <= 1">
                         ⬅️ Anterior
                     </button>
         
-                    <button class="nav-btn" @click="nextVerse" :disabled="selectedVerse >= verseCount">
+                    <button class="nav-btn" @click="nextVerse" :disabled="parseInt(selectedVerse) >= parseInt(verseCount)">
                         Próximo ➡️
                     </button>
                 </div>
@@ -69,6 +69,11 @@
 
             <div class="verse-content">
                 {{displayVerse()}}
+            </div>
+
+            <!-- Dica de navegação apenas no fullscreen -->
+            <div class="fullscreen-navigation-hint" v-if="isFullscreen">
+                <div class="hint-text">Use ⬅️ ➡️ para navegar • ESC para sair</div>
             </div>
         </div>
 
@@ -138,24 +143,31 @@
                 },
                 previVerse() {
                     if(this.selectedVerse > 1) {
-                        this.selectedVerse = this.selectedVerse - 1;
+                        this.selectedVerse = parseInt(this.selectedVerse) - 1;
+                        console.log('Verso anterior:', this.selectedVerse);
                     }
                 },
                 nextVerse() {
-                    if(this.verseCount > this.selectedVerse) {
-                        this.selectedVerse = this.selectedVerse + 1;
+                    console.log('nextVerse chamado - selectedVerse:', this.selectedVerse, 'verseCount:', this.verseCount);
+                    if(parseInt(this.selectedVerse) < parseInt(this.verseCount)) {
+                        this.selectedVerse = parseInt(this.selectedVerse) + 1;
+                        console.log('Próximo verso:', this.selectedVerse);
+                    } else {
+                        console.log('Já está no último versículo');
                     }
                 },
                 toggleFullscreen() {
                     if (!document.fullscreenElement) {
                         document.documentElement.requestFullscreen().then(() => {
                             this.isFullscreen = true;
+                            console.log('Entrou em fullscreen');
                         }).catch(err => {
                             console.log('Erro ao entrar em tela cheia:', err);
                         });
                     } else {
                         document.exitFullscreen().then(() => {
                             this.isFullscreen = false;
+                            console.log('Saiu do fullscreen');
                         }).catch(err => {
                             console.log('Erro ao sair da tela cheia:', err);
                         });
@@ -163,11 +175,13 @@
                 },
                 updateFullscreenStatus() {
                     this.isFullscreen = !!document.fullscreenElement;
-                }
-            },
-            computed: {
-                getVerses() {
-                    if (!this.selectedBook || !this.selectedChapter) return [];
+                    console.log('Status fullscreen atualizado:', this.isFullscreen);
+                },
+                updateVerseCount() {
+                    if (!this.selectedBook || !this.selectedChapter) {
+                        this.verseCount = 0;
+                        return;
+                    }
                     
                     let versiculosCapituloLivro = this.jsonData.filter(versiculo => 
                         versiculo.book == this.selectedBook.book_id && 
@@ -175,6 +189,23 @@
                     );
                     
                     this.verseCount = versiculosCapituloLivro.length;
+                    console.log('updateVerseCount chamado - Total de versículos:', this.verseCount);
+                }
+            },
+            computed: {
+                getVerses() {
+                    if (!this.selectedBook || !this.selectedChapter) {
+                        this.verseCount = 0;
+                        return [];
+                    }
+                    
+                    let versiculosCapituloLivro = this.jsonData.filter(versiculo => 
+                        versiculo.book == this.selectedBook.book_id && 
+                        versiculo.chapter == this.selectedChapter
+                    );
+                    
+                    this.verseCount = versiculosCapituloLivro.length;
+                    console.log('Contagem de versículos atualizada:', this.verseCount, 'para livro:', this.selectedBook.book_name, 'capítulo:', this.selectedChapter);
                     
                     // Só resetar o versículo se não estiver definido ou for inválido
                     if (!this.selectedVerse || this.selectedVerse > this.verseCount) {
@@ -182,6 +213,31 @@
                     }
                     
                     return Array.from({ length: this.verseCount }, (_, i) => i + 1);
+                }
+            },
+            watch: {
+                selectedVerse(newVal, oldVal) {
+                    console.log('selectedVerse mudou de', oldVal, 'para', newVal, 'tipo:', typeof newVal);
+                },
+                verseCount(newVal, oldVal) {
+                    console.log('verseCount mudou de', oldVal, 'para', newVal, 'tipo:', typeof newVal);
+                },
+                selectedBook(newVal, oldVal) {
+                    console.log('selectedBook mudou:', newVal?.book_name);
+                    this.selectedChapter = "";
+                    this.selectedVerse = "";
+                    this.verseCount = 0;
+                },
+                selectedChapter(newVal, oldVal) {
+                    console.log('selectedChapter mudou para:', newVal);
+                    this.selectedVerse = "";
+                    // Forçar recálculo dos versículos
+                    this.$nextTick(() => {
+                        this.updateVerseCount();
+                        if (this.verseCount > 0 && !this.selectedVerse) {
+                            this.selectedVerse = 1;
+                        }
+                    });
                 }
             },
             mounted() {
@@ -206,13 +262,17 @@
         function lidarComEventoDeTeclado(event) {
             // Navegar com setas apenas se há versículo selecionado
             if (app.selectedBook && app.selectedChapter && app.selectedVerse) {
-                if (event.keyCode === 39) { // Seta direita
-                    app.nextVerse();
+                if (event.keyCode === 39 || event.key === 'ArrowRight') { // Seta direita
+                    if (app.selectedVerse < app.verseCount) {
+                        app.nextVerse();
+                    }
                     event.preventDefault();
                 }
 
-                if (event.keyCode === 37) { // Seta esquerda
-                    app.previVerse();
+                if (event.keyCode === 37 || event.key === 'ArrowLeft') { // Seta esquerda
+                    if (app.selectedVerse > 1) {
+                        app.previVerse();
+                    }
                     event.preventDefault();
                 }
             }

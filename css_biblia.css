@@ -253,29 +253,122 @@ body, html {
     font-family: 'Courier New', monospace;
 }
 
-/* Modo tela cheia */
+/* Modo tela cheia - OCULTAR COMPLETAMENTE OS CONTROLES */
+:fullscreen {
+    background: #000000 !important;
+}
+
+:fullscreen .controls-bar {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+:-webkit-full-screen {
+    background: #000000 !important;
+}
+
+:-webkit-full-screen .controls-bar {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+:-moz-full-screen {
+    background: #000000 !important;
+}
+
+:-moz-full-screen .controls-bar {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+:-ms-fullscreen {
+    background: #000000 !important;
+}
+
+:-ms-fullscreen .controls-bar {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Fallback para body */
 body:fullscreen {
     background: #000000;
 }
 
 body:fullscreen .controls-bar {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+:fullscreen .verse-display-area,
+:-webkit-full-screen .verse-display-area,
+:-moz-full-screen .verse-display-area,
+:-ms-fullscreen .verse-display-area,
+body:fullscreen .verse-display-area {
+    padding: 0;
+    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 10000;
-    background: rgba(44, 62, 80, 0.95);
-    backdrop-filter: blur(10px);
+    bottom: 0;
+    background: #000000;
+    z-index: 9999;
 }
 
-body:fullscreen .verse-display-area {
-    padding-top: 150px;
-    min-height: 100vh;
+:fullscreen .title-book,
+:-webkit-full-screen .title-book,
+:-moz-full-screen .title-book,
+:-ms-fullscreen .title-book,
+body:fullscreen .title-book {
+    font-size: clamp(3rem, 8vw, 6rem);
+    margin-bottom: 40px;
+    color: #ffffff;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
 }
 
+:fullscreen .verse-content,
+:-webkit-full-screen .verse-content,
+:-moz-full-screen .verse-content,
+:-ms-fullscreen .verse-content,
 body:fullscreen .verse-content {
-    font-size: clamp(2rem, 6vw, 5rem);
-    background: rgba(0,0,0,0.6);
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    background: transparent;
+    padding: 40px;
+    max-width: 95%;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    box-shadow: none;
+    border-radius: 0;
+    line-height: 1.3;
+}
+
+/* Dica de navegação no fullscreen */
+.fullscreen-navigation-hint {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.7;
+    animation: fadeInOut 4s ease-in-out infinite;
+}
+
+.hint-text {
+    color: #bdc3c7;
+    font-size: 1.2rem;
+    text-align: center;
+    background: rgba(0,0,0,0.5);
+    padding: 10px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
 }
 
 /* Responsividade */

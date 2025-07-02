@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste - Sistema Bíblia</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f0f0f0; }
+        .test-section { margin: 20px 0; padding: 15px; background: white; border-radius: 8px; }
+        .test-result { padding: 10px; margin: 5px 0; border-radius: 4px; }
+        .pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        button { padding: 8px 16px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Testes do Sistema da Bíblia Sagrada</h1>
+    
+    <div class="test-section">
+        <h2>Teste 1: Carregamento de Dados</h2>
+        <div id="test1-result"></div>
+        <button onclick="runTest1()">Executar Teste 1</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Teste 2: Navegação de Versículos</h2>
+        <div id="test2-result"></div>
+        <button onclick="runTest2()">Executar Teste 2</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Teste 3: Fullscreen</h2>
+        <div id="test3-result"></div>
+        <button onclick="runTest3()">Executar Teste 3</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Executar Todos os Testes</h2>
+        <button onclick="runAllTests()">🚀 Executar Todos</button>
+    </div>
+
+    <script src="jsondata_almeida_rc.js"></script>
+    <script src="books_bible.js"></script>
+
+    <script>
+        function showResult(testId, message, passed) {
+            const resultDiv = document.getElementById(testId + '-result');
+            resultDiv.innerHTML = `<div class="${passed ? 'pass' : 'fail'}">${message}</div>`;
+        }
+
+        function runTest1() {
+            console.log('🧪 Executando Teste 1: Carregamento de Dados');
+            
+            try {
+                // Verificar se os dados foram carregados
+                const dataLoaded = typeof jsonData !== 'undefined' && jsonData.verses && jsonData.verses.length > 0;
+                const booksLoaded = typeof booksbible !== 'undefined' && booksbible.length > 0;
+                
+                if (dataLoaded && booksLoaded) {
+                    showResult('test1', `✅ PASSOU: Dados carregados corretamente. ${jsonData.verses.length} versículos e ${booksbible.length} livros encontrados.`, true);
+                    
+                    // Teste específico: Números 4:5
+                    const numerosVerses = jsonData.verses.filter(v => v.book == 4 && v.chapter == 4);
+                    console.log('Versículos encontrados para Números 4:', numerosVerses.length);
+                    
+                    if (numerosVerses.length > 5) {
+                        console.log('✅ Números 4 tem mais de 5 versículos');
+                    } else {
+                        console.log('❌ Problema: Números 4 deveria ter mais versículos');
+                    }
+                    
+                } else {
+                    showResult('test1', '❌ FALHOU: Dados não foram carregados corretamente.', false);
+                }
+            } catch (error) {
+                showResult('test1', `❌ ERRO: ${error.message}`, false);
+            }
+        }
+
+        function runTest2() {
+            console.log('🧪 Executando Teste 2: Navegação de Versículos');
+            
+            try {
+                // Simular seleção de Números, capítulo 4
+                const selectedBook = booksbible.find(book => book.book_name === "Números");
+                const selectedChapter = 4;
+                
+                if (!selectedBook) {
+                    showResult('test2', '❌ FALHOU: Livro "Números" não encontrado.', false);
+                    return;
+                }
+                
+                // Contar versículos
+                const versiculosCapitulo = jsonData.verses.filter(versiculo => 
+                    versiculo.book == selectedBook.book_id && 
+                    versiculo.chapter == selectedChapter
+                );
+                
+                const verseCount = versiculosCapitulo.length;
+                console.log(`Números ${selectedChapter} tem ${verseCount} versículos`);
+                
+                if (verseCount > 5) {
+                    // Testar navegação
+                    let currentVerse = 5;
+                    let canGoNext = currentVerse < verseCount;
+                    let canGoPrev = currentVerse > 1;
+                    
+                    showResult('test2', `✅ PASSOU: Números ${selectedChapter} tem ${verseCount} versículos. Navegação: Anterior=${canGoPrev}, Próximo=${canGoNext}`, true);
+                } else {
+                    showResult('test2', `❌ FALHOU: Números ${selectedChapter} deveria ter mais versículos (encontrado: ${verseCount})`, false);
+                }
+                
+            } catch (error) {
+                showResult('test2', `❌ ERRO: ${error.message}`, false);
+            }
+        }
+
+        function runTest3() {
+            console.log('🧪 Executando Teste 3: Fullscreen');
+            
+            try {
+                // Verificar se a API de fullscreen está disponível
+                const fullscreenAvailable = document.documentElement.requestFullscreen || 
+                                          document.documentElement.webkitRequestFullscreen || 
+                                          document.documentElement.mozRequestFullScreen || 
+                                          document.documentElement.msRequestFullscreen;
+                
+                if (fullscreenAvailable) {
+                    showResult('test3', '✅ PASSOU: API de fullscreen está disponível no navegador.', true);
+                } else {
+                    showResult('test3', '❌ FALHOU: API de fullscreen não está disponível.', false);
+                }
+                
+            } catch (error) {
+                showResult('test3', `❌ ERRO: ${error.message}`, false);
+            }
+        }
+
+        function runAllTests() {
+            console.log('🚀 Executando todos os testes...');
+            runTest1();
+            setTimeout(() => runTest2(), 100);
+            setTimeout(() => runTest3(), 200);
+            setTimeout(() => {
+                console.log('✅ Todos os testes executados!');
+                alert('Testes concluídos! Verifique os resultados na página.');
+            }, 300);
+        }
+
+        // Executar teste básico ao carregar
+        window.onload = function() {
+            console.log('Página de testes carregada');
+        };
+    </script>
+</body>
+</html> 
