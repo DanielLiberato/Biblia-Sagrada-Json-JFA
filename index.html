@@ -1,130 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Ler JSON com JavaScript</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de leitura da Bíblia Sagrada com navegação intuitiva e modo tela cheia">
+    <meta name="keywords" content="bíblia, sagrada, leitura, versículos, almeida">
+    <meta name="author" content="Sistema Bíblia Sagrada">
+    
+    <title>📖 Bíblia Sagrada - Sistema de Leitura</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="assets/css/css_biblia.css">
 </head>
 <body>
-    <link rel="stylesheet" href="css_biblia.css">
-
+    <!-- Aplicação Principal -->
     <div id="app">
-        <div class="filtros">
-            Biblia Sagrada
-            <select v-model="selectedBook">
-                <option value="">Selecione um Livro</option>
-                <option v-for="book in booksbible" :key="book" :value="book">{{ book.book_name }}</option>
-            </select>
-          
-            <select v-model="selectedChapter" v-if="selectedBook">
-                <option value="">Selecione um Capítulo</option>
-                <option v-for="chapter in getChapters(selectedBook)" :key="chapter" :value="chapter">{{ chapter }}</option>
-            </select>
-          
-            <select v-model="selectedVerse" v-if="selectedChapter">
-                <option value="">Selecione um Versículo</option>
-                <option v-for="verse in getVerses" :key="verse" :value="verse">{{ verse }}</option>
-            </select>
+        <!-- Barra de Controles -->
+        <div class="controls-bar">
+            <div class="filtros">
+                <h2>📖 Bíblia Sagrada</h2>
+                
+                <!-- Seleção de Versão -->
+                <div class="selection-group">
+                    <label>Versão:</label>
+                    <select v-model="selectedVersion" class="version-select" @change="loadBibleVersion">
+                        <option value="rc">Almeida Revista e Corrigida (RC)</option>
+                        <option value="ra">Almeida Revista e Atualizada (RA)</option>
+                    </select>
+                </div>
 
-            {{verseCount ?? 0}}
+                <!-- Seleção de Livro -->
+                <div class="selection-group">
+                    <label>Livro:</label>
+                    <select v-model="selectedBook" class="book-select">
+                        <option value="">Selecione um Livro</option>
+                        <option v-for="book in booksbible" :key="book" :value="book">{{ book.book_name }}</option>
+                    </select>
+                </div>
+              
+                <!-- Seleção de Capítulo -->
+                <div class="selection-group" v-if="selectedBook">
+                    <label>Capítulo:</label>
+                    <select v-model="selectedChapter" class="chapter-select">
+                        <option value="">Selecione um Capítulo</option>
+                        <option v-for="chapter in getChapters(selectedBook)" :key="chapter" :value="chapter">{{ chapter }}</option>
+                    </select>
+                </div>
+              
+                <!-- Seleção de Versículo -->
+                <div class="selection-group" v-if="selectedChapter">
+                    <label>Versículo:</label>
+                    <div class="verse-controls">
+                        <input 
+                            type="number" 
+                            v-model.number="selectedVerse" 
+                            :min="1" 
+                            :max="verseCount" 
+                            class="verse-input"
+                            placeholder="Nº"
+                        >
+                        <span class="verse-info">de {{ verseCount }}</span>
+                    </div>
+                </div>
 
-            <span v-if="selectedBook && selectedChapter && selectedVerse">
-                <button id="prev" @click="previVerse">
-                    ←
-                </button>
-    
-                <button id="next" @click="nextVerse">
-                    →
-                </button>
-            </span>
+                <!-- Controles de Navegação -->
+                <div class="navigation-controls" v-if="selectedBook && selectedChapter && selectedVerse">
+                    <button class="nav-btn" @click="previVerse" :disabled="parseInt(selectedVerse) <= 1">
+                        ⬅️ Anterior
+                    </button>
+        
+                    <button class="nav-btn" @click="nextVerse" :disabled="parseInt(selectedVerse) >= parseInt(verseCount)">
+                        Próximo ➡️
+                    </button>
+                </div>
+
+                <!-- Controle de Tela Cheia -->
+                <div class="fullscreen-controls">
+                    <button class="fullscreen-btn" @click="toggleFullscreen" :title="isFullscreen ? 'Sair da Tela Cheia (ESC)' : 'Entrar em Tela Cheia (F11)'">
+                        {{ isFullscreen ? '🔲 Sair Tela Cheia' : '⛶ Tela Cheia' }}
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <div class="title-book" v-if="selectedBook && selectedChapter && selectedVerse"> {{selectedBook.book_name}} {{selectedChapter}}:{{selectedVerse}} </div>
+        <!-- Área de Exibição do Versículo -->
+        <div class="verse-display-area" v-if="selectedBook && selectedChapter && selectedVerse">
+            <div class="title-book">
+                {{selectedBook.book_name}} {{selectedChapter}}:{{selectedVerse}}
+            </div>
 
-        <div class="tela-cheia" v-html="message"></div>
+            <div class="verse-content">
+                {{displayVerse()}}
+            </div>
 
-        <div v-if="selectedBook && selectedChapter && selectedVerse" class="tela-cheia">
-            {{displayVerse()}}
+            <!-- Dica de navegação apenas no fullscreen -->
+            <div class="fullscreen-navigation-hint" v-if="isFullscreen">
+                <div class="hint-text">Use ⬅️ ➡️ para navegar • ESC para sair</div>
+            </div>
         </div>
 
-        <div v-if="debugcode">
+        <!-- Mensagem de Boas-vindas -->
+        <div v-else class="welcome-message">
+            <h3>👋 Bem-vindo ao Sistema da Bíblia Sagrada</h3>
+            <p>Selecione uma versão, livro, capítulo e versículo para começar</p>
+            <div class="instructions">
+                <p><strong>Atalhos do teclado:</strong></p>
+                <ul>
+                    <li>⬅️ ➡️ - Navegar entre versículos</li>
+                    <li>F11 - Entrar/Sair da tela cheia</li>
+                    <li>ESC - Sair da tela cheia</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Informações de Debug (apenas se ativado) -->
+        <div v-if="debugcode" class="debug-info">
             <pre>
-                selectedbook : {{selectedBook}},
-                selectedChapter : {{selectedChapter}},
-                selectedVerse : {{selectedVerse}}
+selectedBook: {{selectedBook?.book_name || 'Nenhum'}},
+selectedChapter: {{selectedChapter || 'Nenhum'}},
+selectedVerse: {{selectedVerse || 'Nenhum'}},
+selectedVersion: {{selectedVersion}},
+verseCount: {{verseCount}},
+isFullscreen: {{isFullscreen}}
             </pre>
         </div>
     </div>
 
-
-    <script src="jsondata_almeida_rc.js"></script>
-    <script src="books_bible.js"></script>
-
-    <script src="vue_2.js"></script>
-    
-    <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                debugcode: false,
-                message: '',
-                jsonData: jsonData.verses,
-                booksbible: booksbible,
-                verseCount: 0, 
-                selectedBook: "",
-                selectedChapter: "",
-                selectedVerse: "",
-            },
-            methods: {
-                getChapters(book) { 
-                    return Array.from({ length: book.chapters }, (_, i) => i + 1);
-                },
-                displayVerse() {
-                    let versiculoSelecionado = this.jsonData.filter(versiculo => versiculo.book == this.selectedBook.book_id && versiculo.chapter == this.selectedChapter && versiculo.verse == this.selectedVerse)
-                    
-                    if (versiculoSelecionado.length == 0) {
-                        this.selectedChapter = 1
-                        this.selectedVerse = 1
-                        versiculoSelecionado = this.jsonData.filter(versiculo => versiculo.book == this.selectedBook.book_id && versiculo.chapter == this.selectedChapter && versiculo.verse == this.selectedVerse)  
-                    }
-
-                    return versiculoSelecionado[0].text;
-                },
-                previVerse() {
-                    if(this.selectedVerse >= 2) {
-                        this.selectedVerse = this.selectedVerse - 1;
-                    }
-                },
-                nextVerse() {
-                    if(this.verseCount > this.selectedVerse) {
-                        this.selectedVerse = this.selectedVerse + 1;
-                    }
-                }
-            },
-            computed: {
-                getVerses() {
-                    this.selectedVerse = 1;
-                    let versiculosCapituloLivro = this.jsonData.filter(versiculo => versiculo.book == this.selectedBook.book_id && versiculo.chapter == this.selectedChapter);
-                    
-                    this.verseCount = versiculosCapituloLivro.length;
-                    return Array.from({ length: this.verseCount }, (_, i) => i + 1);
-                },
-            },
-        })
-    </script>
-
-    <script>
-        // Função para lidar com o evento de teclado
-        function lidarComEventoDeTeclado(event) {
-            if (event.keyCode === 39) {
-                document.getElementById('next').click();
-            }
-
-            if (event.keyCode === 37) {
-                document.getElementById('prev').click();
-            }
-        }
-
-        // Adicione um ouvinte de evento de teclado ao documento
-        document.addEventListener('keydown', lidarComEventoDeTeclado);
-    </script>
+    <!-- Scripts -->
+    <script src="assets/data/jsondata_almeida_rc.js"></script>
+    <script src="assets/data/jsondata_almeida_ra.js"></script>
+    <script src="assets/data/books_bible.js"></script>
+    <script src="assets/js/vue_2.js"></script>
+    <script src="assets/js/bible-app.js"></script>
 </body>
 </html>
