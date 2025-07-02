@@ -14,6 +14,14 @@
                 <h2>📖 Bíblia Sagrada</h2>
                 
                 <div class="selection-group">
+                    <label>Versão:</label>
+                    <select v-model="selectedVersion" class="version-select" @change="loadBibleVersion">
+                        <option value="rc">Almeida Revista e Corrigida (RC)</option>
+                        <option value="ra">Almeida Revista e Atualizada (RA)</option>
+                    </select>
+                </div>
+
+                <div class="selection-group">
                     <label>Livro:</label>
                     <select v-model="selectedBook" class="book-select">
                         <option value="">Selecione um Livro</option>
@@ -101,6 +109,7 @@
     </div>
 
     <script src="jsondata_almeida_rc.js"></script>
+    <script src="jsondata_almeida_ra.js"></script>
     <script src="books_bible.js"></script>
     <script src="vue_2.js"></script>
     
@@ -110,13 +119,18 @@
             data: {
                 debugcode: false,
                 message: '',
-                jsonData: jsonData.verses,
+                jsonData: [],
                 booksbible: booksbible,
                 verseCount: 0, 
                 selectedBook: "",
                 selectedChapter: "",
                 selectedVerse: "",
-                isFullscreen: false
+                isFullscreen: false,
+                selectedVersion: "rc",
+                bibleVersions: {
+                    rc: null,
+                    ra: null
+                }
             },
             methods: {
                 getChapters(book) { 
@@ -190,6 +204,22 @@
                     
                     this.verseCount = versiculosCapituloLivro.length;
                     console.log('updateVerseCount chamado - Total de versículos:', this.verseCount);
+                },
+                loadBibleVersion() {
+                    // Resetar seleções quando trocar de versão
+                    this.selectedBook = "";
+                    this.selectedChapter = "";
+                    this.selectedVerse = "";
+                    this.verseCount = 0;
+                    
+                    // Carregar a versão selecionada
+                    if (this.selectedVersion === 'rc' && this.bibleVersions.rc) {
+                        this.jsonData = this.bibleVersions.rc.verses;
+                        console.log('Carregada versão RC (Revista e Corrigida)');
+                    } else if (this.selectedVersion === 'ra' && this.bibleVersions.ra) {
+                        this.jsonData = this.bibleVersions.ra.verses;
+                        console.log('Carregada versão RA (Revista e Atualizada)');
+                    }
                 }
             },
             computed: {
@@ -241,6 +271,17 @@
                 }
             },
             mounted() {
+                // Inicializar as versões da Bíblia
+                if (typeof jsonDataRC !== 'undefined') {
+                    this.bibleVersions.rc = jsonDataRC;
+                }
+                if (typeof jsonDataRA !== 'undefined') {
+                    this.bibleVersions.ra = jsonDataRA;
+                }
+                
+                // Carregar a versão padrão (RC)
+                this.loadBibleVersion();
+                
                 // Listener para mudanças no estado de tela cheia
                 document.addEventListener('fullscreenchange', this.updateFullscreenStatus);
                 document.addEventListener('webkitfullscreenchange', this.updateFullscreenStatus);

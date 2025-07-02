@@ -49,10 +49,11 @@ body, html {
     font-weight: bold;
     color: #ecf0f1;
     font-size: 1.1em;
+    height: 1.2em; /* Altura fixa para labels */
 }
 
 /* Selects melhorados */
-.book-select, .chapter-select {
+.book-select, .chapter-select, .version-select {
     padding: 12px 16px;
     border: none;
     border-radius: 8px;
@@ -60,11 +61,12 @@ body, html {
     color: #2c3e50;
     font-size: 1.1em;
     min-width: 200px;
+    height: 48px; /* Altura fixa para alinhamento */
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
 }
 
-.book-select:focus, .chapter-select:focus {
+.book-select:focus, .chapter-select:focus, .version-select:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
     transform: translateY(-2px);
@@ -75,6 +77,7 @@ body, html {
     display: flex;
     align-items: center;
     gap: 10px;
+    height: 48px; /* Mesma altura dos selects */
 }
 
 .verse-input {
@@ -85,9 +88,11 @@ body, html {
     color: #2c3e50;
     font-size: 1.1em;
     width: 80px;
+    height: 48px; /* Mesma altura dos selects */
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
 .verse-input:focus {
@@ -109,6 +114,13 @@ body, html {
     vertical-align: top;
 }
 
+.navigation-controls::before {
+    content: "";
+    display: block;
+    height: 1.2em; /* Mesma altura das labels */
+    margin-bottom: 8px;
+}
+
 .nav-btn {
     padding: 12px 20px;
     margin: 0 5px;
@@ -121,6 +133,8 @@ body, html {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    height: 48px; /* Mesma altura dos selects */
+    box-sizing: border-box;
 }
 
 .nav-btn:hover:not(:disabled) {
@@ -141,6 +155,13 @@ body, html {
     vertical-align: top;
 }
 
+.fullscreen-controls::before {
+    content: "";
+    display: block;
+    height: 1.2em; /* Mesma altura das labels */
+    margin-bottom: 8px;
+}
+
 .fullscreen-btn {
     padding: 12px 20px;
     border: none;
@@ -152,6 +173,8 @@ body, html {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    height: 48px; /* Mesma altura dos selects */
+    box-sizing: border-box;
 }
 
 .fullscreen-btn:hover {
