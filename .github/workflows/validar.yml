@@ -1,0 +1,10 @@
+name: Teste de CI
+
+on: push
+
+jobs:
+    dizer-ola:
+        runs-on: ubuntu-latest
+        steps:
+            - name: print message
+              run: echo "Meu primeiro workflow no repositório da Bíbila!"
