@@ -1,10 +1,58 @@
-name: Teste de CI
+name: Deploy no GitHub Pages
 
-on: push
+# Gatilho: Rodar apenas quando houver um push na branch 'main'
+on:
+  push:
+    branches: ["main"] # Mude para 'master' se for o seu caso
+
+# Permissões especiais para o token da Action poder fazer o deploy
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Evitar deploys concorrentes
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-    dizer-ola:
-        runs-on: ubuntu-latest
-        steps:
-            - name: print message
-              run: echo "Meu primeiro workflow no repositório da Bíbila!"
+  # Job de "Build" - No seu caso, é só copiar os arquivos
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+      
+      # Este passo não é estritamente necessário para JSON, mas é uma boa prática
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+        
+      # O passo mais importante: "Construir" o site.
+      # Aqui, estamos apenas copiando *tudo* (path: '.') para um artefato.
+      - name: Upload do artefato (seu site)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Pasta que será "upada"
+          path: '.' 
+
+  # Job de "Deploy"
+  deploy:
+    # Este job precisa que o job 'build' termine com sucesso
+    needs: build
+    
+    # Permissões (redundante, mas garante)
+    permissions:
+      pages: write
+      id-token: write
+    
+    # Define o ambiente de deploy (obrigatório)
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # Salva a URL final
+      
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # Action mágica que faz o deploy
